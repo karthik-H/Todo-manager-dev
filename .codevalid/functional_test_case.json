@@ -1,5 +1,342 @@
 {
   "function": [],
   "component": [],
-  "endpoint": []
+  "endpoint": [
+    {
+      "implementation_id": "endpoint_create_task",
+      "test_cases": [
+        {
+          "description": "Verify that a new task is created successfully when a valid TaskCreate payload is provided.",
+          "id": "tc_create_task_valid_payload",
+          "implementation_id": "endpoint_create_task",
+          "name": "create_task_with_valid_payload",
+          "request_body_json": {
+            "description": "Purchase milk and eggs",
+            "due_date": "2024-06-25",
+            "title": "Buy groceries"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "description": "Purchase milk and eggs",
+            "due_date": "2024-06-25",
+            "id": 1,
+            "status": "pending",
+            "title": "Buy groceries"
+          },
+          "response_status_code": 201,
+          "test_setup": {
+            "given": "No existing tasks in the system.",
+            "then": "A new task is created and returned with a 201 status.",
+            "when": "A POST request is sent with a valid TaskCreate payload."
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Verify that the API returns a 422 error when the required 'title' field is missing.",
+          "id": "tc_create_task_missing_required_field",
+          "implementation_id": "endpoint_create_task",
+          "name": "create_task_missing_required_field",
+          "request_body_json": {
+            "description": "No title field provided",
+            "due_date": "2024-06-25"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "detail": [
+              {
+                "loc": [
+                  "body",
+                  "title"
+                ],
+                "msg": "field required",
+                "type": "value_error.missing"
+              }
+            ]
+          },
+          "response_status_code": 422,
+          "test_setup": {
+            "given": "No existing tasks in the system.",
+            "then": "The request fails with a 422 status and appropriate error message.",
+            "when": "A POST request is sent without the required 'title' field."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Verify that the API returns an error when the 'title' field is provided as an empty string.",
+          "id": "tc_create_task_empty_title",
+          "implementation_id": "endpoint_create_task",
+          "name": "create_task_with_empty_title",
+          "request_body_json": {
+            "description": "Task with empty title",
+            "due_date": "2024-06-25",
+            "title": ""
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "detail": [
+              {
+                "loc": [
+                  "body",
+                  "title"
+                ],
+                "msg": "Title must not be empty",
+                "type": "value_error"
+              }
+            ]
+          },
+          "response_status_code": 422,
+          "test_setup": {
+            "given": "No existing tasks in the system.",
+            "then": "The request fails with a 422 status and validation error.",
+            "when": "A POST request is sent with an empty 'title' field."
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Verify that a task is created successfully when the 'title' field is at its maximum allowed length.",
+          "id": "tc_create_task_long_title",
+          "implementation_id": "endpoint_create_task",
+          "name": "create_task_with_max_length_title",
+          "request_body_json": {
+            "description": "Task with maximum length title",
+            "due_date": "2024-06-25",
+            "title": "T.repeat(255)"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "description": "Task with maximum length title",
+            "due_date": "2024-06-25",
+            "id": 2,
+            "status": "pending",
+            "title": "T.repeat(255)"
+          },
+          "response_status_code": 201,
+          "test_setup": {
+            "given": "No existing tasks in the system.",
+            "then": "A new task is created and returned with a 201 status.",
+            "when": "A POST request is sent with 'title' at maximum allowed length."
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Verify that the API returns a 422 error when the 'due_date' field is not in valid YYYY-MM-DD format.",
+          "id": "tc_create_task_invalid_due_date_format",
+          "implementation_id": "endpoint_create_task",
+          "name": "create_task_invalid_due_date_format",
+          "request_body_json": {
+            "description": "Task with bad due date",
+            "due_date": "25-06-2024",
+            "title": "Submit assignment"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "detail": [
+              {
+                "loc": [
+                  "body",
+                  "due_date"
+                ],
+                "msg": "invalid date format",
+                "type": "value_error.date"
+              }
+            ]
+          },
+          "response_status_code": 422,
+          "test_setup": {
+            "given": "No existing tasks in the system.",
+            "then": "The request fails with a 422 error and validation message.",
+            "when": "A POST request is sent with an invalid 'due_date' format."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Verify that the API ignores extra fields not defined in TaskCreate.",
+          "id": "tc_create_task_extra_fields",
+          "implementation_id": "endpoint_create_task",
+          "name": "create_task_with_extra_fields",
+          "request_body_json": {
+            "description": "Evening walk",
+            "due_date": "2024-06-25",
+            "priority": "high",
+            "title": "Walk dog"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "description": "Evening walk",
+            "due_date": "2024-06-25",
+            "id": 3,
+            "status": "pending",
+            "title": "Walk dog"
+          },
+          "response_status_code": 201,
+          "test_setup": {
+            "given": "No existing tasks in the system.",
+            "then": "The task is created and the extra field is ignored.",
+            "when": "A POST request is sent with valid fields and an extra 'priority' field."
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Verify that the API returns a 422 error when the request body is missing.",
+          "id": "tc_create_task_no_body",
+          "implementation_id": "endpoint_create_task",
+          "name": "create_task_with_no_body",
+          "request_body_json": null,
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "detail": [
+              {
+                "loc": [
+                  "body"
+                ],
+                "msg": "field required",
+                "type": "value_error.missing"
+              }
+            ]
+          },
+          "response_status_code": 422,
+          "test_setup": {
+            "given": "No existing tasks in the system.",
+            "then": "The API returns a 422 error indicating the body is required.",
+            "when": "A POST request is sent without a body."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Verify that the API returns a 415 error when the body is not valid JSON.",
+          "id": "tc_create_task_non_json_body",
+          "implementation_id": "endpoint_create_task",
+          "name": "create_task_with_non_json_body",
+          "request_body_json": "Not a JSON string",
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "detail": "Unsupported Media Type"
+          },
+          "response_status_code": 415,
+          "test_setup": {
+            "given": "No existing tasks in the system.",
+            "then": "The API returns a 415 error.",
+            "when": "A POST request is sent with a non-JSON body."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Verify that the API prevents creation of duplicate tasks if duplicates are not allowed.",
+          "id": "tc_create_task_duplicate_task",
+          "implementation_id": "endpoint_create_task",
+          "name": "create_task_duplicate_task",
+          "request_body_json": {
+            "description": "Purchase milk and eggs",
+            "due_date": "2024-06-25",
+            "title": "Buy groceries"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "detail": "Task with the same title and due date already exists"
+          },
+          "response_status_code": 409,
+          "test_setup": {
+            "given": "A task with title 'Buy groceries' and due date '2024-06-25' already exists.",
+            "then": "The API rejects the request with a 409 status.",
+            "when": "A POST request is sent with the same title and due date."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Verify that a task is created successfully when the 'title' field is at the minimum allowed length.",
+          "id": "tc_create_task_min_length_title",
+          "implementation_id": "endpoint_create_task",
+          "name": "create_task_with_min_length_title",
+          "request_body_json": {
+            "description": "Task with minimum length title",
+            "due_date": "2024-06-25",
+            "title": "A"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "description": "Task with minimum length title",
+            "due_date": "2024-06-25",
+            "id": 4,
+            "status": "pending",
+            "title": "A"
+          },
+          "response_status_code": 201,
+          "test_setup": {
+            "given": "No existing tasks in the system.",
+            "then": "A new task is created and returned with a 201 status.",
+            "when": "A POST request is sent with 'title' at the minimum allowed length."
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Verify that a task can be created with required fields only and optional fields missing.",
+          "id": "tc_create_task_optional_fields_missing",
+          "implementation_id": "endpoint_create_task",
+          "name": "create_task_optional_fields_missing",
+          "request_body_json": {
+            "title": "Read book"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "description": null,
+            "due_date": null,
+            "id": 5,
+            "status": "pending",
+            "title": "Read book"
+          },
+          "response_status_code": 201,
+          "test_setup": {
+            "given": "No existing tasks in the system.",
+            "then": "A new task is created, and optional fields are set to default/null values.",
+            "when": "A POST request is sent with only the required 'title' field."
+          },
+          "type": "positive"
+        }
+      ]
+    }
+  ]
 }
