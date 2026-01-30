@@ -1,6 +1,586 @@
 {
-  "function": [],
-  "component": [],
+  "function": [
+    {
+      "implementation_id": "api-create-task-function",
+      "test_cases": [
+        {
+          "description": "Verify that api.createTask successfully creates a task when given all required fields with valid values.",
+          "id": "TC1_valid_task_creation",
+          "implementation_id": "api-create-task-function",
+          "name": "Valid Task Creation",
+          "test_setup": {
+            "given": {
+              "task": {
+                "description": "Prepare API documentation for the new endpoint.",
+                "dueDate": "2024-07-01",
+                "priority": "high",
+                "title": "Write documentation"
+              }
+            },
+            "then": {
+              "created_task": {
+                "description": "Prepare API documentation for the new endpoint.",
+                "dueDate": "2024-07-01",
+                "id": "generated_by_backend",
+                "priority": "high",
+                "title": "Write documentation"
+              }
+            },
+            "when": "api.createTask(task) is called"
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Ensure function throws an error if a required field (e.g., title) is missing.",
+          "id": "TC2_missing_required_field",
+          "implementation_id": "api-create-task-function",
+          "name": "Missing Required Field",
+          "test_setup": {
+            "given": {
+              "task": {
+                "description": "Prepare API documentation for the new endpoint.",
+                "dueDate": "2024-07-01",
+                "priority": "high"
+              }
+            },
+            "then": "Error is thrown (e.g., 400 Bad Request)",
+            "when": "api.createTask(task) is called"
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Verify that the function throws an error if a field has an invalid type (e.g., title is a number instead of a string).",
+          "id": "TC3_invalid_field_type",
+          "implementation_id": "api-create-task-function",
+          "name": "Invalid Field Type",
+          "test_setup": {
+            "given": {
+              "task": {
+                "description": "Prepare API documentation for the new endpoint.",
+                "dueDate": "2024-07-01",
+                "priority": "high",
+                "title": 12345
+              }
+            },
+            "then": "Error is thrown (e.g., 400 Bad Request)",
+            "when": "api.createTask(task) is called"
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Ensure the function throws an error when the title field is an empty string.",
+          "id": "TC4_empty_string_title",
+          "implementation_id": "api-create-task-function",
+          "name": "Empty String Title",
+          "test_setup": {
+            "given": {
+              "task": {
+                "description": "Prepare API documentation for the new endpoint.",
+                "dueDate": "2024-07-01",
+                "priority": "high",
+                "title": ""
+              }
+            },
+            "then": "Error is thrown (e.g., 400 Bad Request)",
+            "when": "api.createTask(task) is called"
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Verify that the function handles the maximum allowed title length correctly.",
+          "id": "TC5_boundary_long_title",
+          "implementation_id": "api-create-task-function",
+          "name": "Boundary Long Title",
+          "test_setup": {
+            "given": {
+              "task": {
+                "description": "Prepare API documentation for the new endpoint.",
+                "dueDate": "2024-07-01",
+                "priority": "high",
+                "title": "T.repeat(255)"
+              }
+            },
+            "then": {
+              "created_task": {
+                "description": "Prepare API documentation for the new endpoint.",
+                "dueDate": "2024-07-01",
+                "id": "generated_by_backend",
+                "priority": "high",
+                "title": "T.repeat(255)"
+              }
+            },
+            "when": "api.createTask(task) is called"
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Verify that the function throws an error when dueDate is not in a valid date format.",
+          "id": "TC6_invalid_dueDate_format",
+          "implementation_id": "api-create-task-function",
+          "name": "Invalid dueDate Format",
+          "test_setup": {
+            "given": {
+              "task": {
+                "description": "Prepare API documentation for the new endpoint.",
+                "dueDate": "not-a-date",
+                "priority": "high",
+                "title": "Write documentation"
+              }
+            },
+            "then": "Error is thrown (e.g., 400 Bad Request)",
+            "when": "api.createTask(task) is called"
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Verify that the function throws an error when priority is not one of the allowed values (e.g., 'low', 'medium', 'high').",
+          "id": "TC7_priority_out_of_range",
+          "implementation_id": "api-create-task-function",
+          "name": "Priority Out of Allowed Values",
+          "test_setup": {
+            "given": {
+              "task": {
+                "description": "Prepare API documentation for the new endpoint.",
+                "dueDate": "2024-07-01",
+                "priority": "urgent",
+                "title": "Write documentation"
+              }
+            },
+            "then": "Error is thrown (e.g., 400 Bad Request)",
+            "when": "api.createTask(task) is called"
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Verify that the function throws an error when the backend responds with a 500 Internal Server Error.",
+          "id": "TC8_server_error_response",
+          "implementation_id": "api-create-task-function",
+          "name": "Server Error Response",
+          "test_setup": {
+            "given": {
+              "task": {
+                "description": "Prepare API documentation for the new endpoint.",
+                "dueDate": "2024-07-01",
+                "priority": "high",
+                "title": "Write documentation"
+              }
+            },
+            "then": "Error is thrown",
+            "when": "api.createTask(task) is called and backend returns 500 error"
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Test the function's behavior when the network request fails (e.g., connection timeout).",
+          "id": "TC9_network_failure",
+          "implementation_id": "api-create-task-function",
+          "name": "Network Failure",
+          "test_setup": {
+            "given": {
+              "task": {
+                "description": "Prepare API documentation for the new endpoint.",
+                "dueDate": "2024-07-01",
+                "priority": "high",
+                "title": "Write documentation"
+              }
+            },
+            "then": "Error is thrown (e.g., network error)",
+            "when": "api.createTask(task) is called and network fails"
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Verify that extra fields in the input task are ignored or cause an error, depending on API specification.",
+          "id": "TC10_extra_fields_in_task",
+          "implementation_id": "api-create-task-function",
+          "name": "Extra Fields in Task",
+          "test_setup": {
+            "given": {
+              "task": {
+                "description": "Prepare API documentation for the new endpoint.",
+                "dueDate": "2024-07-01",
+                "priority": "high",
+                "title": "Write documentation",
+                "unexpectedField": "unexpectedValue"
+              }
+            },
+            "then": "Either created_task is returned without unexpectedField, or error is thrown (depending on API spec)",
+            "when": "api.createTask(task) is called"
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Verify the function works when only the strictly required fields are present.",
+          "id": "TC11_minimum_fields_only",
+          "implementation_id": "api-create-task-function",
+          "name": "Minimum Fields Only",
+          "test_setup": {
+            "given": {
+              "task": {
+                "title": "Write documentation"
+              }
+            },
+            "then": {
+              "created_task": {
+                "id": "generated_by_backend",
+                "title": "Write documentation"
+              }
+            },
+            "when": "api.createTask(task) is called"
+          },
+          "type": "positive"
+        }
+      ]
+    },
+    {
+      "implementation_id": "database-add-task-function",
+      "test_cases": [
+        {
+          "description": "Verify that a new task is created and persisted with only required fields provided.",
+          "id": "add_task_valid_minimal_fields",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task with minimal valid fields",
+          "test_setup": {
+            "given": "A valid task_create input with minimal required fields (e.g., title: 'Test Task'). Task database is empty.",
+            "then": "A new Task object is returned with a unique ID and the provided fields. Task is saved in the database.",
+            "when": "add_task is called with this input."
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Check that a task is created with all possible optional and required fields.",
+          "id": "add_task_valid_all_fields",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task with all fields provided",
+          "test_setup": {
+            "given": "A valid task_create input containing all allowed fields (e.g., title, description, due_date, priority, status).",
+            "then": "A new Task object is returned containing all provided field values, a unique ID is generated, and task is saved to the database.",
+            "when": "add_task is called with this input."
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Ensure that each added task receives a unique ID even when tasks already exist.",
+          "id": "add_task_unique_id_generation",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task with unique ID generation",
+          "test_setup": {
+            "given": "Database contains existing tasks with IDs 1, 2, 3. task_create input is valid.",
+            "then": "The new Task object is assigned an ID not in [1,2,3] (e.g., 4), and is saved to the database.",
+            "when": "add_task is called."
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Test that a task can be added when the database file exists but contains an empty list.",
+          "id": "add_task_empty_database_file",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task when database file is empty",
+          "test_setup": {
+            "given": "Database file exists with empty JSON array []. Valid task_create input provided.",
+            "then": "A new Task object is created with ID 1 (or initial value), and saved to the database.",
+            "when": "add_task is called."
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Verify function creates a new database file if it does not exist and adds the new task.",
+          "id": "add_task_no_database_file",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task when database file does not exist",
+          "test_setup": {
+            "given": "No database file is present. Valid task_create input provided.",
+            "then": "A new database file is created with the new Task as its first entry.",
+            "when": "add_task is called."
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Ensure function fails or handles gracefully when required fields (e.g., title) are missing in input.",
+          "id": "add_task_invalid_missing_required_field",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task with missing required field",
+          "test_setup": {
+            "given": "task_create input is missing a required field (e.g., title).",
+            "then": "Function raises an error or returns a validation failure.",
+            "when": "add_task is called."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Check that the function handles type errors (e.g., title is an integer instead of string).",
+          "id": "add_task_invalid_field_type",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task with invalid field type",
+          "test_setup": {
+            "given": "task_create input has title as 123 instead of a string.",
+            "then": "Function raises a type error or returns a validation failure.",
+            "when": "add_task is called."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Verify that tasks with duplicate titles are allowed if not restricted by business rules.",
+          "id": "add_task_duplicate_title",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task with duplicate title",
+          "test_setup": {
+            "given": "Existing task with title 'Duplicate'. task_create input also has title 'Duplicate'.",
+            "then": "Function creates and saves the task with duplicate title but a unique ID.",
+            "when": "add_task is called."
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Test the system's ability to handle large string inputs, e.g., very long title or description.",
+          "id": "add_task_large_input_fields",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task with extremely large field values",
+          "test_setup": {
+            "given": "task_create input has title and description with 10,000+ characters.",
+            "then": "Function creates and saves the task successfully without crashing or truncating data.",
+            "when": "add_task is called."
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Ensure the function can handle special characters and unicode in input fields.",
+          "id": "add_task_special_characters",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task with special or unicode characters",
+          "test_setup": {
+            "given": "task_create input has title and description with emojis or non-Latin characters.",
+            "then": "Function creates and saves the task preserving all characters.",
+            "when": "add_task is called."
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Check function's behavior if the database file contains invalid JSON.",
+          "id": "add_task_corrupted_database_file",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task with corrupted database file",
+          "test_setup": {
+            "given": "Database file exists but is not valid JSON (e.g., contains random text). Valid task_create input.",
+            "then": "Function raises a file parse error or handles it gracefully (e.g., recreates file or reports error).",
+            "when": "add_task is called."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Simulate a situation where writing to the database file (e.g., due to permissions or disk full) fails.",
+          "id": "add_task_database_write_failure",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task when database write fails",
+          "test_setup": {
+            "given": "Database file is read-only or filesystem is out of space. Valid task_create input.",
+            "then": "Function raises an I/O error or reports failure to save task.",
+            "when": "add_task is called."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Ensure function handles null or empty input gracefully.",
+          "id": "add_task_null_input",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task with null input",
+          "test_setup": {
+            "given": "task_create input is null or empty object.",
+            "then": "Function raises an error or returns a validation failure.",
+            "when": "add_task is called."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Test behavior when two tasks are added at the same time (simulating concurrency).",
+          "id": "add_task_concurrent_writes",
+          "implementation_id": "database-add-task-function",
+          "name": "Add task with concurrent writes",
+          "test_setup": {
+            "given": "Two valid task_create inputs submitted nearly simultaneously.",
+            "then": "Both tasks are added, each with a unique ID, and database integrity is preserved.",
+            "when": "add_task is called in parallel by separate processes/threads."
+          },
+          "type": "edge"
+        }
+      ]
+    }
+  ],
+  "component": [
+    {
+      "implementation_id": "taskform-component-task-creation",
+      "test_cases": [
+        {
+          "description": "Verify that all task form fields (title, description, priority, category, due date) are rendered.",
+          "id": "render_all_form_fields",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Render All Form Fields",
+          "test_setup": {
+            "given": "TaskForm component is mounted with default props.",
+            "then": "Input fields for title, description, priority, category, and due date are present in the DOM.",
+            "when": "The component is rendered."
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Form submission should succeed when all required fields are filled properly.",
+          "id": "submit_with_all_valid_fields",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Submit With All Valid Fields",
+          "test_setup": {
+            "given": "TaskForm is rendered. User enters valid values for title, description, priority, category, and due date.",
+            "then": "onSubmit is called with all field values.",
+            "when": "User submits the form."
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Form submission should be prevented if the title field is empty.",
+          "id": "submit_with_empty_title",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Submit With Empty Title",
+          "test_setup": {
+            "given": "TaskForm is rendered. User leaves the title field empty but fills all other fields.",
+            "then": "onSubmit is not called. Validation error is shown for the title field.",
+            "when": "User submits the form."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Form submission should succeed if optional fields (description, category, due date) are empty but title is provided.",
+          "id": "submit_with_empty_optional_fields",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Submit With Empty Optional Fields",
+          "test_setup": {
+            "given": "TaskForm is rendered. User enters a valid title and leaves optional fields blank.",
+            "then": "onSubmit is called with title and empty strings or null for optional fields.",
+            "when": "User submits the form."
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Form submission should be prevented if the title field contains only whitespace.",
+          "id": "submit_with_whitespace_title",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Submit With Whitespace Title",
+          "test_setup": {
+            "given": "TaskForm is rendered. User enters a title containing only spaces.",
+            "then": "onSubmit is not called. Validation error is shown for the title field.",
+            "when": "User submits the form."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Changing any input field should update the component's internal state.",
+          "id": "change_form_fields",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Change Form Fields",
+          "test_setup": {
+            "given": "TaskForm is rendered.",
+            "then": "Corresponding input field values in the component state are updated accordingly.",
+            "when": "User types into title, description, selects a priority, chooses a category, and picks a due date."
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Priority dropdown should display all expected priority options (e.g., Low, Medium, High).",
+          "id": "priority_field_options",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Priority Field Options",
+          "test_setup": {
+            "given": "TaskForm is rendered.",
+            "then": "All predefined priority options are visible and selectable.",
+            "when": "User opens the priority select field."
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Entering an invalid date format should display a validation error and prevent submission.",
+          "id": "due_date_validation_invalid_format",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Due Date Validation - Invalid Format",
+          "test_setup": {
+            "given": "TaskForm is rendered. User enters an invalid date format in the due date field.",
+            "then": "onSubmit is not called. Validation error is shown for due date.",
+            "when": "User submits the form."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Category dropdown should present all available categories/tags.",
+          "id": "category_field_options",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Category Field Options",
+          "test_setup": {
+            "given": "TaskForm is rendered.",
+            "then": "All available categories/tags are displayed and selectable.",
+            "when": "User opens the category select field."
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Form submission should succeed for very long title and description values within allowed limits.",
+          "id": "submit_with_long_title_and_description",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Submit With Long Title and Description",
+          "test_setup": {
+            "given": "TaskForm is rendered. User enters a title and description each at the maximum allowed length.",
+            "then": "onSubmit is called with the long title and description without errors.",
+            "when": "User submits the form."
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Form should accept special characters in title, description, and other fields.",
+          "id": "submit_with_special_characters",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Submit With Special Characters",
+          "test_setup": {
+            "given": "TaskForm is rendered. User enters special characters in all input fields.",
+            "then": "onSubmit is called with all field values containing special characters.",
+            "when": "User submits the form."
+          },
+          "type": "edge"
+        },
+        {
+          "description": "After a successful submission, the form inputs should reset to their initial state.",
+          "id": "reset_form_on_successful_submit",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Reset Form On Successful Submit",
+          "test_setup": {
+            "given": "TaskForm is rendered. User fills all fields and submits successfully.",
+            "then": "All form fields are cleared/reset to initial values.",
+            "when": "onSubmit is called and completes successfully."
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Validation errors should be visibly displayed when submission fails due to missing required fields.",
+          "id": "form_error_display_on_failed_validation",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Form Error Display On Failed Validation",
+          "test_setup": {
+            "given": "TaskForm is rendered. User leaves required fields empty.",
+            "then": "Validation errors are displayed near the relevant fields.",
+            "when": "User submits the form."
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Form submission should be prevented if the due date is in the past.",
+          "id": "submit_with_past_due_date",
+          "implementation_id": "taskform-component-task-creation",
+          "name": "Submit With Past Due Date",
+          "test_setup": {
+            "given": "TaskForm is rendered. User enters a due date that is before today.",
+            "then": "onSubmit is not called. Validation error is shown for due date.",
+            "when": "User submits the form."
+          },
+          "type": "edge"
+        }
+      ]
+    }
+  ],
   "endpoint": [
     {
       "implementation_id": "endpoint_create_task",
@@ -335,6 +915,371 @@
             "when": "A POST request is sent with only the required 'title' field."
           },
           "type": "positive"
+        }
+      ]
+    },
+    {
+      "implementation_id": "fastapi-create-task-endpoint",
+      "test_cases": [
+        {
+          "description": "Tests successful creation of a task with all required and valid fields.",
+          "id": "create_task_valid",
+          "implementation_id": "fastapi-create-task-endpoint",
+          "name": "Create Task With Valid Data",
+          "request_body_json": {
+            "description": "Milk, eggs, and bread",
+            "due_date": "2024-07-01",
+            "priority": 3,
+            "title": "Buy groceries"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "description": "Milk, eggs, and bread",
+            "due_date": "2024-07-01",
+            "id": "generated_task_id",
+            "priority": 3,
+            "title": "Buy groceries"
+          },
+          "response_status_code": 201,
+          "test_setup": {
+            "given": "A valid task payload",
+            "then": "Task is created and returned with 201 status",
+            "when": "POST /tasks is called"
+          },
+          "type": "positive"
+        },
+        {
+          "description": "Tests that the endpoint returns a 422 error when a required field is missing.",
+          "id": "create_task_missing_required_field",
+          "implementation_id": "fastapi-create-task-endpoint",
+          "name": "Create Task With Missing Required Field",
+          "request_body_json": {
+            "description": "Finish math homework",
+            "due_date": "2024-07-02",
+            "priority": 2
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "detail": [
+              {
+                "loc": [
+                  "body",
+                  "title"
+                ],
+                "msg": "field required",
+                "type": "value_error.missing"
+              }
+            ]
+          },
+          "response_status_code": 422,
+          "test_setup": {
+            "given": "A payload missing the required 'title' field",
+            "then": "422 Unprocessable Entity is returned",
+            "when": "POST /tasks is called"
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Tests validation error when 'priority' is not an integer.",
+          "id": "create_task_invalid_priority_type",
+          "implementation_id": "fastapi-create-task-endpoint",
+          "name": "Create Task With Non-Integer Priority",
+          "request_body_json": {
+            "description": "Annual checkup",
+            "due_date": "2024-07-05",
+            "priority": "high",
+            "title": "Doctor appointment"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "detail": [
+              {
+                "loc": [
+                  "body",
+                  "priority"
+                ],
+                "msg": "value is not a valid integer",
+                "type": "type_error.integer"
+              }
+            ]
+          },
+          "response_status_code": 422,
+          "test_setup": {
+            "given": "A payload with 'priority' as a non-integer string",
+            "then": "422 Unprocessable Entity is returned",
+            "when": "POST /tasks is called"
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Tests behavior when 'title' is an empty string.",
+          "id": "create_task_empty_title",
+          "implementation_id": "fastapi-create-task-endpoint",
+          "name": "Create Task With Empty Title",
+          "request_body_json": {
+            "description": "Clean the kitchen",
+            "due_date": "2024-07-03",
+            "priority": 1,
+            "title": ""
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "detail": [
+              {
+                "loc": [
+                  "body",
+                  "title"
+                ],
+                "msg": "Title must not be empty",
+                "type": "value_error"
+              }
+            ]
+          },
+          "response_status_code": 422,
+          "test_setup": {
+            "given": "A payload with an empty 'title'",
+            "then": "422 Unprocessable Entity is returned",
+            "when": "POST /tasks is called"
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Tests that extra unexpected fields are ignored or rejected.",
+          "id": "create_task_extra_fields",
+          "implementation_id": "fastapi-create-task-endpoint",
+          "name": "Create Task With Extra Fields",
+          "request_body_json": {
+            "description": "For vacation",
+            "due_date": "2024-07-10",
+            "priority": 2,
+            "title": "Pack luggage",
+            "unexpected_field": "unexpected_value"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "description": "For vacation",
+            "due_date": "2024-07-10",
+            "id": "generated_task_id",
+            "priority": 2,
+            "title": "Pack luggage"
+          },
+          "response_status_code": 201,
+          "test_setup": {
+            "given": "A payload with an extra field",
+            "then": "Task is created; extra fields are ignored",
+            "when": "POST /tasks is called"
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Tests creation of a task with the minimal non-empty title (single character).",
+          "id": "create_task_min_title_length",
+          "implementation_id": "fastapi-create-task-endpoint",
+          "name": "Create Task With Minimum Title Length",
+          "request_body_json": {
+            "description": "Short task",
+            "due_date": "2024-07-04",
+            "priority": 5,
+            "title": "A"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "description": "Short task",
+            "due_date": "2024-07-04",
+            "id": "generated_task_id",
+            "priority": 5,
+            "title": "A"
+          },
+          "response_status_code": 201,
+          "test_setup": {
+            "given": "A payload with a one-character title",
+            "then": "Task is created successfully",
+            "when": "POST /tasks is called"
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Tests creation of a task with the maximum allowed title length (assuming 255).",
+          "id": "create_task_max_title_length",
+          "implementation_id": "fastapi-create-task-endpoint",
+          "name": "Create Task With Maximum Title Length",
+          "request_body_json": {
+            "description": "Boundary testing for title length",
+            "due_date": "2024-07-06",
+            "priority": 4,
+            "title": "T.repeat(255)"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "description": "Boundary testing for title length",
+            "due_date": "2024-07-06",
+            "id": "generated_task_id",
+            "priority": 4,
+            "title": "T.repeat(255)"
+          },
+          "response_status_code": 201,
+          "test_setup": {
+            "given": "A payload with a 255-character title",
+            "then": "Task is created successfully",
+            "when": "POST /tasks is called"
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Tests that the endpoint rejects an invalid due_date format.",
+          "id": "create_task_invalid_due_date_format",
+          "implementation_id": "fastapi-create-task-endpoint",
+          "name": "Create Task With Invalid Due Date Format",
+          "request_body_json": {
+            "description": "Electric and water",
+            "due_date": "07-01-2024",
+            "priority": 1,
+            "title": "Pay bills"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "detail": [
+              {
+                "loc": [
+                  "body",
+                  "due_date"
+                ],
+                "msg": "invalid date format",
+                "type": "value_error.date"
+              }
+            ]
+          },
+          "response_status_code": 422,
+          "test_setup": {
+            "given": "A payload with an incorrectly formatted due_date",
+            "then": "422 Unprocessable Entity is returned",
+            "when": "POST /tasks is called"
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Tests creation when description is null (if optional).",
+          "id": "create_task_null_description",
+          "implementation_id": "fastapi-create-task-endpoint",
+          "name": "Create Task With Null Description",
+          "request_body_json": {
+            "description": null,
+            "due_date": "2024-07-07",
+            "priority": 2,
+            "title": "Call mom"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "description": null,
+            "due_date": "2024-07-07",
+            "id": "generated_task_id",
+            "priority": 2,
+            "title": "Call mom"
+          },
+          "response_status_code": 201,
+          "test_setup": {
+            "given": "A payload with 'description' as null",
+            "then": "Task is created successfully (if description is optional)",
+            "when": "POST /tasks is called"
+          },
+          "type": "edge"
+        },
+        {
+          "description": "Tests the endpoint when the Content-Type header is missing.",
+          "id": "create_task_missing_content_type_header",
+          "implementation_id": "fastapi-create-task-endpoint",
+          "name": "Create Task Without Content-Type Header",
+          "request_body_json": {
+            "description": "With the team",
+            "due_date": "2024-07-08",
+            "priority": 3,
+            "title": "Attend meeting"
+          },
+          "request_headers": {},
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "detail": "Unsupported Media Type"
+          },
+          "response_status_code": 415,
+          "test_setup": {
+            "given": "A valid payload without Content-Type header",
+            "then": "415 Unsupported Media Type is returned",
+            "when": "POST /tasks is called"
+          },
+          "type": "negative"
+        },
+        {
+          "description": "Tests that the endpoint rejects a priority value out of allowed range (e.g., negative value).",
+          "id": "create_task_priority_out_of_range",
+          "implementation_id": "fastapi-create-task-endpoint",
+          "name": "Create Task With Priority Out Of Range",
+          "request_body_json": {
+            "description": "Morning routine",
+            "due_date": "2024-07-09",
+            "priority": -1,
+            "title": "Feed cat"
+          },
+          "request_headers": {
+            "Content-Type": "application/json"
+          },
+          "request_method": "POST",
+          "request_url": "/tasks",
+          "response_body_json": {
+            "detail": [
+              {
+                "loc": [
+                  "body",
+                  "priority"
+                ],
+                "msg": "Priority must be greater than 0",
+                "type": "value_error"
+              }
+            ]
+          },
+          "response_status_code": 422,
+          "test_setup": {
+            "given": "A payload with a negative priority value",
+            "then": "422 Unprocessable Entity is returned",
+            "when": "POST /tasks is called"
+          },
+          "type": "negative"
         }
       ]
     }
