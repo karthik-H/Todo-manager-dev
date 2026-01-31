@@ -230,7 +230,8 @@
           },
           "type": "positive"
         }
-      ]
+      ],
+      "test_path": ".codevalid/tests/task-1/api-create-task-function.ts"
     },
     {
       "implementation_id": "database-add-task-function",
@@ -403,7 +404,8 @@
           },
           "type": "edge"
         }
-      ]
+      ],
+      "test_path": ".codevalid/tests/task-1/database-add-task-function.py"
     }
   ],
   "component": [
@@ -578,7 +580,8 @@
           },
           "type": "edge"
         }
-      ]
+      ],
+      "test_path": ".codevalid/tests/task-1/taskform-component-task-creation.ts"
     }
   ],
   "endpoint": [
@@ -1281,7 +1284,8 @@
           },
           "type": "negative"
         }
-      ]
+      ],
+      "test_path": ".codevalid/tests/task-1/fastapi-create-task-endpoint.py"
     }
   ]
 }
