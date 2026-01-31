@@ -11,4 +11,4 @@ Personal Todo manager
 - Edit existing tasks 
 - Delete tasks   
 - Mark tasks as **Completed** or **Pending**       
-  
+    
