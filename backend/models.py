@@ -13,6 +13,8 @@ class Category(str, Enum):
     personal = "Personal"
     study = "Study"
 
+from pydantic import BaseModel, field_validator
+
 class TaskBase(BaseModel):
     title: str
     description: Optional[str] = None
@@ -20,6 +22,13 @@ class TaskBase(BaseModel):
     category: Optional[Category] = None
     due_date: Optional[date] = None
     completed: bool = False
+
+    @field_validator("title")
+    @classmethod
+    def title_must_not_be_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError("Title must not be empty")
+        return v
 
 class TaskCreate(TaskBase):
     pass
