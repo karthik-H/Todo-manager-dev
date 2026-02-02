@@ -23,7 +23,7 @@ app.add_middleware(
 async def read_tasks():
     return database.get_tasks()
 
-@app.post("/tasks", response_model=Task)
+@app.post("/tasks", response_model=Task, status_code=201)
 async def create_task(task: TaskCreate):
     return database.add_task(task)
 
