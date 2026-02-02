@@ -14,7 +14,7 @@ class Category(str, Enum):
     study = "Study"
 
 class TaskBase(BaseModel):
-    title: str
+    title: str = Field(..., min_length=1)
     description: Optional[str] = None
     priority: Priority = Priority.medium
     category: Optional[Category] = None
