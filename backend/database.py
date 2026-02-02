@@ -25,6 +25,12 @@ def save_tasks(tasks: List[Task]):
         json.dump(json_data, f, indent=4)
 
 def add_task(task_create: TaskCreate) -> Task:
+    # Validate input is not None
+    if task_create is None:
+        raise ValueError("Input task data cannot be None")
+    # Validate required field 'title' is present and not empty
+    if not hasattr(task_create, "title") or not isinstance(task_create.title, str) or not task_create.title.strip():
+        raise ValueError("Task 'title' is required and cannot be empty")
     tasks = get_tasks()
     new_task = Task(id=str(uuid.uuid4()), **task_create.model_dump())
     tasks.append(new_task)
