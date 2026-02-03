@@ -10,5 +10,5 @@ Personal Todo manager
   - Tag
 - Edit existing tasks 
 - Delete tasks   
-- Mark tasks as **Completed** or **Pending**  and **Inprogress** status   
+- Mark tasks as **Completed** or **Pending**
   
