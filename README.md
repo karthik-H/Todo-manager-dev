@@ -1,5 +1,5 @@
 # Todo-manager-dev
-Personal Todo manager
+Personal Todo manager  
 
 ## Functional Requirements
 - Add new tasks with: 
