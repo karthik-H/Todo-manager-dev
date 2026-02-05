@@ -25,6 +25,9 @@ async def read_tasks():
 
 @app.post("/tasks", response_model=Task)
 async def create_task(task: TaskCreate):
+    # Validate required field 'title'
+    if not task.title or not isinstance(task.title, str) or not task.title.strip():
+        raise HTTPException(status_code=422, detail="Task 'title' is required and cannot be empty.")
     return database.add_task(task)
 
 @app.put("/tasks/{task_id}", response_model=Task)

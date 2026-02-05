@@ -24,11 +24,20 @@ def save_tasks(tasks: List[Task]):
         json_data = [t.model_dump(mode='json') for t in tasks]
         json.dump(json_data, f, indent=4)
 
+import threading
+
+_lock = threading.Lock()
+
 def add_task(task_create: TaskCreate) -> Task:
-    tasks = get_tasks()
-    new_task = Task(id=str(uuid.uuid4()), **task_create.model_dump())
-    tasks.append(new_task)
-    save_tasks(tasks)
+    # Validate required field 'title'
+    title = getattr(task_create, "title", None)
+    if not title or not isinstance(title, str) or not title.strip():
+        raise ValueError("Task 'title' is required and cannot be empty.")
+    with _lock:
+        tasks = get_tasks()
+        new_task = Task(id=str(uuid.uuid4()), **task_create.model_dump())
+        tasks.append(new_task)
+        save_tasks(tasks)
     return new_task
 
 def update_task(task_id: str, task_update: TaskCreate) -> Optional[Task]:
