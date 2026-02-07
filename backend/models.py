@@ -22,7 +22,16 @@ class TaskBase(BaseModel):
     completed: bool = False
 
 class TaskCreate(TaskBase):
-    pass
+    title: str  # Required, non-empty
+    # Enforce non-empty string for title
+    @classmethod
+    def __get_validators__(cls):
+        yield from super().__get_validators__()
+        def not_empty_title(v):
+            if not isinstance(v, str) or not v.strip():
+                raise ValueError("title must be a non-empty string")
+            return v
+        yield not_empty_title
 
 class Task(TaskBase):
     id: str
