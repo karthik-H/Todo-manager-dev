@@ -6,7 +6,7 @@ Personal Todo manager
   - Title 
   - Description
   - Priority
-  - Due date
+  - Due date 
   - Tag
 - Edit existing tasks 
 - Delete tasks   
