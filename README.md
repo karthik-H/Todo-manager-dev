@@ -8,7 +8,6 @@ Personal Todo manager
   - Priority
   - Due date 
   - Location
-- Edit existing tasks 
-- Delete tasks   
+- Edit existing tasks    
 - Mark tasks as **Completed** or **Pending**     
    
